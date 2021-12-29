@@ -1,0 +1,42 @@
+# First Sonic Pi trial
+use_random_seed 40
+define :synthesizer do |root, repeats|
+  repeats.times do
+    play chord(root, :minor), release: 0.3
+    if one_in(2)
+      sample :loop_amen, pan: -1, rate: 1.5, attack: 1, release: 0.75
+      sleep 0.7
+      sample :drum_cymbal_open, attack: 0.01, sustain: 0.3, release: 0.1
+      sleep 0.7
+    else
+      sample :loop_amen, pan: 1, rate: -1, attack: 0.3, release: 0.75
+      sleep 0.7
+      sample :drum_heavy_kick, attack: 0.01, sustain: 0.3, release: 0.1
+      sleep 0.7
+    end
+    sample :guit_harmonics, rate: 2, attack: 0.01, sustain: 0, release: 0.35
+    sleep 0.7
+    sample :drum_cymbal_closed, amp: 0.5
+    sleep 0.2
+    play choose([60, 65, 72]), amp: rand
+  end
+end
+
+define :happy_sound do
+  use_synth :kalimba
+  play choose(chord(:D3, :minor)), release: 0.3, cutoff: rrand(60, 120)
+  play_pattern_timed scale(:C3, :minor, num_octaves: 3), 0.125, release: 0.1
+  play_pattern_timed chord(:A3, :m13), [0.25, 0.5]
+  play_pattern_timed chord(:G3, :m7), 0.25
+  play_pattern_timed scale(:F3, :minor, num_octaves: 3), 0.125, release: 0.1
+end
+
+synthesizer :E3, 2
+sleep 0.2
+happy_sound
+synthesizer :A3, 3
+synthesizer :G3, 4
+sleep 0.2
+synthesizer :E3, 3
+sleep 0.2
+happy_sound
